@@ -163,4 +163,35 @@ This tool is for internal use but will be designed as an open source project so 
 - Use GitHub Actions for linting, testing, and preview deployment
 - Document deployment paths for Vercel, Netlify, and Docker in `/docs/deploy.md`
 - Label issues with `good first issue`, `help wanted`, and `bug` to promote community engagement
-- Maintain a roadmap and changelog for contributors 
+- Maintain a roadmap and changelog for contributors
+
+---
+
+## 9. Verifiable Credentials & Blockchain Verification
+
+**Objective:**
+Enable companies to issue digitally signed, verifiable employment credentials to candidates that can be validated by future employers without exposing private data. This ensures employment history, achievements, and roles are cryptographically verifiable, traceable to trusted issuers, and tamper-resistant.
+
+**Components:**
+
+- **Verifiable Credential Issuer**: Company generates structured claims such as employment duration, title, achievements, and manager info
+- **Credential Wallet**: Candidate stores VCs and presents them when applying for jobs
+- **Credential Verifier**: New employers or systems validate claims using digital signatures and blockchain registry
+- **Blockchain Registry**: Stores hashes of issued credentials for tamper detection and timestamp validation
+
+**Capabilities:**
+
+- Companies can issue structured credentials including job roles, dates, achievements, and reporting managers
+- VCs follow W3C DID/VC standard and are stored off-chain (e.g., Ceramic/IPFS)
+- Fingerprints (hashes) of credentials are stored on-chain for public verification
+- Multiple employers, managers, or peers can issue complementary or independent credentials or attestations
+- Optional endorsements or comments on credentials can be recorded via attestations
+- Candidate-submitted claims during reference checks can be cross-checked against previously issued VCs
+- Optional ZKP integrations allow proof of employment without disclosing sensitive details (e.g., Semaphore)
+
+**Open Source Considerations:**
+
+- Entire credential flow (issuer, verifier, ZK proof, registry) is modular and open source
+- Uses pluggable smart contracts for credential hashing and verification
+- Designed to allow local or cloud-hosted deployments of credential issuing servers
+- This module is enabled by default and can be configured or extended as needed 
