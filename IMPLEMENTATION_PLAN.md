@@ -287,23 +287,257 @@ export class LinkedInParser {
 }
 ```
 
-## Phase 4: Admin Dashboard (Week 6)
+## Phase 3.5: Blockchain Infrastructure (Week 5.5)
 
-### 4.1 Dashboard Features
+### 3.5.1 Blockchain Setup
 
-**Candidate Overview:**
-- Employment timeline visualization
+**Smart Contract Development:**
+```solidity
+// contracts/CredentialRegistry.sol
+contract CredentialRegistry {
+    mapping(bytes32 => bool) public credentialHashes;
+    mapping(address => bytes32[]) public issuerCredentials;
+    
+    event CredentialIssued(bytes32 indexed hash, address indexed issuer, uint256 timestamp);
+    event CredentialVerified(bytes32 indexed hash, address indexed verifier, uint256 timestamp);
+    
+    function issueCredential(bytes32 credentialHash) external {
+        credentialHashes[credentialHash] = true;
+        issuerCredentials[msg.sender].push(credentialHash);
+        emit CredentialIssued(credentialHash, msg.sender, block.timestamp);
+    }
+    
+    function verifyCredential(bytes32 credentialHash) external view returns (bool) {
+        return credentialHashes[credentialHash];
+    }
+}
+```
+
+**Web3 Integration:**
+```typescript
+// src/lib/blockchain.ts
+export class BlockchainService {
+  private provider: ethers.providers.Provider;
+  private contract: ethers.Contract;
+  
+  constructor(providerUrl: string, contractAddress: string) {
+    this.provider = new ethers.providers.JsonRpcProvider(providerUrl);
+    this.contract = new ethers.Contract(contractAddress, ABI, this.provider);
+  }
+  
+  async issueCredential(credentialHash: string, signer: ethers.Signer): Promise<void> {
+    const tx = await this.contract.connect(signer).issueCredential(credentialHash);
+    await tx.wait();
+  }
+  
+  async verifyCredential(credentialHash: string): Promise<boolean> {
+    return await this.contract.verifyCredential(credentialHash);
+  }
+}
+```
+
+### 3.5.2 IPFS/Ceramic Integration
+
+**Decentralized Storage:**
+```typescript
+// src/lib/ipfs.ts
+export class IPFSService {
+  private ipfs: IPFS;
+  
+  constructor() {
+    this.ipfs = createIPFS();
+  }
+  
+  async storeCredential(credential: VerifiableCredential): Promise<string> {
+    const cid = await this.ipfs.add(JSON.stringify(credential));
+    return cid.toString();
+  }
+  
+  async retrieveCredential(cid: string): Promise<VerifiableCredential> {
+    const chunks = [];
+    for await (const chunk of this.ipfs.cat(cid)) {
+      chunks.push(chunk);
+    }
+    return JSON.parse(Buffer.concat(chunks).toString());
+  }
+}
+```
+
+## Phase 4: Verifiable Credentials (Week 6)
+
+### 4.1 Verifiable Credential Framework
+
+**W3C DID/VC Implementation:**
+```typescript
+// src/lib/verifiable-credentials.ts
+export interface VerifiableCredential {
+  "@context": string[];
+  id: string;
+  type: string[];
+  issuer: string;
+  issuanceDate: string;
+  credentialSubject: {
+    id: string;
+    employment: {
+      company: string;
+      title: string;
+      startDate: string;
+      endDate?: string;
+      achievements: string[];
+      manager: string;
+    };
+  };
+  proof: {
+    type: string;
+    created: string;
+    verificationMethod: string;
+    proofPurpose: string;
+    proofValue: string;
+  };
+}
+
+export class CredentialService {
+  async issueCredential(
+    subject: string,
+    employment: EmploymentData,
+    issuerKey: string
+  ): Promise<VerifiableCredential> {
+    const credential: VerifiableCredential = {
+      "@context": ["https://www.w3.org/2018/credentials/v1"],
+      id: `urn:uuid:${crypto.randomUUID()}`,
+      type: ["VerifiableCredential", "EmploymentCredential"],
+      issuer: issuerKey,
+      issuanceDate: new Date().toISOString(),
+      credentialSubject: {
+        id: subject,
+        employment
+      },
+      proof: await this.generateProof(credential, issuerKey)
+    };
+    
+    return credential;
+  }
+  
+  async verifyCredential(credential: VerifiableCredential): Promise<boolean> {
+    // Verify digital signature and blockchain hash
+    const signatureValid = await this.verifySignature(credential);
+    const hashValid = await this.verifyBlockchainHash(credential);
+    return signatureValid && hashValid;
+  }
+}
+```
+
+### 4.2 Credential Wallet Integration
+
+**Candidate Credential Management:**
+```typescript
+// src/lib/credential-wallet.ts
+export class CredentialWallet {
+  private storage: Storage;
+  
+  constructor() {
+    this.storage = new SecureStorage();
+  }
+  
+  async storeCredential(credential: VerifiableCredential): Promise<void> {
+    const credentials = await this.getCredentials();
+    credentials.push(credential);
+    await this.storage.set('credentials', JSON.stringify(credentials));
+  }
+  
+  async getCredentials(): Promise<VerifiableCredential[]> {
+    const stored = await this.storage.get('credentials');
+    return stored ? JSON.parse(stored) : [];
+  }
+  
+  async presentCredential(credentialId: string): Promise<VerifiableCredential> {
+    const credentials = await this.getCredentials();
+    return credentials.find(c => c.id === credentialId);
+  }
+}
+```
+
+## Phase 4.5: Zero-Knowledge Proofs (Week 6.5)
+
+### 4.5.1 ZK Proof Implementation
+
+**Semaphore Integration:**
+```typescript
+// src/lib/zk-proofs.ts
+export class ZKProofService {
+  async generateEmploymentProof(
+    credential: VerifiableCredential,
+    publicInputs: any
+  ): Promise<ZKProof> {
+    // Generate zero-knowledge proof that employment exists
+    // without revealing specific details
+    const circuit = await this.loadCircuit('employment_proof');
+    const witness = await this.generateWitness(credential);
+    
+    return await circuit.generateProof(witness, publicInputs);
+  }
+  
+  async verifyEmploymentProof(
+    proof: ZKProof,
+    publicInputs: any
+  ): Promise<boolean> {
+    const circuit = await this.loadCircuit('employment_proof');
+    return await circuit.verifyProof(proof, publicInputs);
+  }
+}
+```
+
+### 4.5.2 Privacy-Preserving Verification
+
+**Selective Disclosure:**
+```typescript
+// src/lib/selective-disclosure.ts
+export class SelectiveDisclosureService {
+  async createSelectiveCredential(
+    fullCredential: VerifiableCredential,
+    disclosedFields: string[]
+  ): Promise<VerifiableCredential> {
+    const selectiveSubject = {};
+    disclosedFields.forEach(field => {
+      selectiveSubject[field] = fullCredential.credentialSubject.employment[field];
+    });
+    
+    return {
+      ...fullCredential,
+      credentialSubject: {
+        id: fullCredential.credentialSubject.id,
+        employment: selectiveSubject
+      }
+    };
+  }
+}
+```
+
+## Phase 5: Admin Dashboard (Week 7)
+
+### 5.1 Enhanced Dashboard Features
+
+**Candidate Overview with VC Integration:**
+- Employment timeline with verifiable credentials
 - Reference status tracking
 - Score breakdown charts
 - Flag indicators
+- Blockchain verification status
+
+**Credential Management:**
+- Issue new verifiable credentials
+- Verify existing credentials
+- View credential history
+- Manage credential revocation
 
 **Admin Actions:**
 - Manual referee approval/rejection
 - Reference resend functionality
 - Export capabilities
 - Audit log viewing
+- Credential issuance and verification
 
-### 4.2 Access Control
+### 5.2 Access Control
 
 **Role-Based Access:**
 ```typescript
@@ -312,7 +546,8 @@ export enum UserRole {
   CANDIDATE = 'candidate',
   REFEREE = 'referee',
   ADMIN = 'admin',
-  HR_MANAGER = 'hr_manager'
+  HR_MANAGER = 'hr_manager',
+  CREDENTIAL_ISSUER = 'credential_issuer'
 }
 
 export class AccessControl {
@@ -323,12 +558,16 @@ export class AccessControl {
   static canManageReferees(user: User): boolean {
     return user.role === UserRole.ADMIN;
   }
+  
+  static canIssueCredentials(user: User): boolean {
+    return [UserRole.ADMIN, UserRole.CREDENTIAL_ISSUER].includes(user.role);
+  }
 }
 ```
 
-## Phase 5: Open Source Preparation (Week 7)
+## Phase 6: Open Source Preparation (Week 8)
 
-### 5.1 Documentation Structure
+### 6.1 Documentation Structure
 
 ```
 docs/
@@ -337,10 +576,13 @@ docs/
 ├── DEPLOYMENT.md              # Deployment instructions
 ├── API.md                     # API documentation
 ├── ARCHITECTURE.md            # System architecture
+├── BLOCKCHAIN.md              # Blockchain integration guide
+├── VERIFIABLE_CREDENTIALS.md  # VC implementation guide
 └── examples/
     ├── docker-compose.yml     # Local development
     ├── .env.example          # Environment variables
-    └── seed-data.json        # Sample data
+    ├── seed-data.json        # Sample data
+    └── smart-contracts/      # Solidity contracts
 ```
 
 ### 5.2 Developer Experience Features
@@ -413,8 +655,11 @@ export class ProviderRegistry {
 | 3 | Candidate Flow | Submission form, OAuth integration, email system |
 | 4 | Referee System | Reference forms, validation logic, email templates |
 | 5 | AI Integration | Scoring algorithms, LinkedIn parsing, analytics |
-| 6 | Admin Dashboard | Dashboard UI, access controls, reporting |
-| 7 | Open Source | Documentation, deployment guides, community setup |
+| 5.5 | Blockchain Infrastructure | Smart contracts, Web3 integration, IPFS setup |
+| 6 | Verifiable Credentials | W3C DID/VC implementation, credential wallet |
+| 6.5 | Zero-Knowledge Proofs | ZK circuits, privacy-preserving verification |
+| 7 | Admin Dashboard | Enhanced dashboard with VC integration |
+| 8 | Open Source | Documentation, deployment guides, community setup |
 
 ## Success Metrics
 
@@ -423,12 +668,16 @@ export class ProviderRegistry {
 - < 2 second page load times
 - 99.9% uptime for production deployments
 - Zero critical security vulnerabilities
+- Blockchain transaction success rate > 99%
+- ZK proof generation time < 5 seconds
 
 **Community Metrics:**
 - 10+ forks within first month
 - 5+ community contributions
 - 3+ deployment guides (Vercel, Docker, Self-hosted)
 - Active issue and PR engagement
+- 3+ blockchain integrations contributed
+- 2+ ZK proof implementations shared
 
 ## Risk Mitigation
 
@@ -437,10 +686,15 @@ export class ProviderRegistry {
 - **Email deliverability:** Use Resend with proper SPF/DKIM setup
 - **AI API costs:** Implement caching and local model fallbacks
 - **Data privacy:** Encrypt sensitive data, implement data retention policies
+- **Blockchain gas costs:** Implement layer 2 solutions and gas optimization
+- **ZK proof complexity:** Provide simplified interfaces and documentation
+- **Smart contract security:** Comprehensive testing and formal verification
 
 **Community Risks:**
 - **Low adoption:** Focus on developer experience and clear documentation
 - **Maintenance burden:** Implement automated testing and CI/CD
 - **Security concerns:** Regular security audits and vulnerability scanning
+- **Blockchain expertise gap:** Provide tutorials and simplified integration options
+- **ZK proof adoption:** Create user-friendly abstractions and examples
 
 This implementation plan ensures the project is truly open source, developer-friendly, and systematically addresses all requirements from the PRD. 
