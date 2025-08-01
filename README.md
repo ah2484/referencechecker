@@ -107,6 +107,38 @@ EMAIL_PROVIDER=custom
 4. **Issue Credentials** → Blockchain-based verification
 5. **Generate Reports** → Comprehensive analytics
 
+### **Verifiable Credentials Flow**
+```
+          +-------------------------+
+          |  Previous Employer (HR)|
+          | Issues Verifiable Cred |
+          +-----------+------------+
+                      |
+                      v
+          +-------------------------+
+          | Off-chain VC Storage    |
+          | (IPFS, Ceramic, etc)    |
+          +-----------+------------+
+                      |
+                      v
+          +-------------------------+
+          |  Hash posted on-chain   |
+          |  (e.g. Ethereum, Polygon)|
+          +-----------+------------+
+                      |
+                      v
+          +-------------------------+
+          | Candidate submits claims|
+          | + VCs to new employer   |
+          +-----------+------------+
+                      |
+                      v
+          +-------------------------+
+          | New Employer verifies   |
+          | claims + VCs + red flags|
+          +-------------------------+
+```
+
 ## 🛠️ Tech Stack
 
 ### Core Framework

@@ -226,6 +226,7 @@ graph TD
 
 ### **Verifiable Credentials Flow**
 
+#### **Mermaid Diagram**
 ```mermaid
 graph TD
     A[Employment Verified] --> B[Generate Credential]
@@ -241,6 +242,38 @@ graph TD
     style I fill:#c8e6c9
     style E fill:#fff3e0
     style G fill:#f3e5f5
+```
+
+#### **ASCII Flow Diagram**
+```
+          +-------------------------+
+          |  Previous Employer (HR)|
+          | Issues Verifiable Cred |
+          +-----------+------------+
+                      |
+                      v
+          +-------------------------+
+          | Off-chain VC Storage    |
+          | (IPFS, Ceramic, etc)    |
+          +-----------+------------+
+                      |
+                      v
+          +-------------------------+
+          |  Hash posted on-chain   |
+          |  (e.g. Ethereum, Polygon)|
+          +-----------+------------+
+                      |
+                      v
+          +-------------------------+
+          | Candidate submits claims|
+          | + VCs to new employer   |
+          +-----------+------------+
+                      |
+                      v
+          +-------------------------+
+          | New Employer verifies   |
+          | claims + VCs + red flags|
+          +-------------------------+
 ```
 
 ## 📊 **Data Models**
