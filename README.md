@@ -1,6 +1,10 @@
 # Reference Validator - Open Source Foundation
 
-A **provider-agnostic, open-source foundation** for reference and employment validation tools. Built with modern web technologies and designed for maximum flexibility and developer freedom.
+A **provider-agnostic, open-source foundation** for building employment verification and reference checking systems. Built with modern web technologies and designed to democratize enterprise-grade verification capabilities.
+
+## 🌟 Vision Statement
+
+> **"To democratize employment verification by providing an open-source, provider-agnostic foundation that enables any organization to build robust reference and employment validation systems with their preferred technology stack."**
 
 ## 🎯 What This Is
 
@@ -11,6 +15,7 @@ This is a **working foundation** that provides:
 - ✅ **TypeScript interfaces** for all services
 - ✅ **Working application** with sample data
 - ✅ **Ready for contribution** - Open source from day one
+- ✅ **Privacy-first design** - Built for verifiable credentials and zero-knowledge proofs
 
 ## 🚀 Quick Start
 
@@ -78,6 +83,29 @@ EMAIL_PROVIDER=custom
 - **Registry System**: Easy provider registration and switching
 - **Sample Data**: Realistic data to see the system in action
 - **API Endpoints**: Working REST API with provider abstraction
+
+## 🔄 Intended User Flows
+
+### **Candidate Journey**
+1. **Submit Application** → LinkedIn OAuth integration
+2. **Employment History** → Automated extraction and validation
+3. **Referee Identification** → Smart detection from employment data
+4. **Reference Collection** → Automated email outreach
+5. **AI Analysis** → Intelligent scoring and risk assessment
+6. **Verifiable Credentials** → Blockchain-based employment proof
+
+### **Referee Journey**
+1. **Receive Email** → Secure token-based invitation
+2. **Complete Form** → Comprehensive reference questionnaire
+3. **Submit Response** → Real-time AI processing
+4. **Risk Assessment** → Automatic flagging of concerns
+
+### **Admin Journey**
+1. **Dashboard Overview** → Real-time verification progress
+2. **Monitor Candidates** → Track reference collection status
+3. **Review Flags** → AI-identified risk assessment
+4. **Issue Credentials** → Blockchain-based verification
+5. **Generate Reports** → Comprehensive analytics
 
 ## 🛠️ Tech Stack
 
@@ -203,11 +231,13 @@ npm run dev
 
 ## 📚 Documentation
 
-- [Developer Guide](./docs/DEVELOPER_GUIDE.md) - Complete guide to the provider system
-- [Product Requirements](./prd.md) - Full product specification
-- [Implementation Plan](./IMPLEMENTATION_PLAN.md) - Development roadmap
-- [Contributing Guide](./docs/CONTRIBUTING.md) - How to contribute
-- [Deployment Guide](./docs/DEPLOYMENT.md) - Deployment options
+- **[Vision & Goals](./docs/VISION_AND_GOALS.md)** - Project vision and objectives
+- **[Architecture Diagrams](./docs/ARCHITECTURE_DIAGRAMS.md)** - Visual system flows
+- **[Developer Guide](./docs/DEVELOPER_GUIDE.md)** - Complete guide to the provider system
+- **[Product Requirements](./prd.md)** - Full product specification
+- **[Implementation Plan](./IMPLEMENTATION_PLAN.md)** - Development roadmap
+- **[Contributing Guide](./docs/CONTRIBUTING.md)** - How to contribute
+- **[Deployment Guide](./docs/DEPLOYMENT.md)** - Deployment options
 
 ## 🤝 Contributing
 
@@ -251,6 +281,46 @@ RESEND_API_KEY=your_resend_key
 ## 📄 License
 
 MIT License - see [LICENSE](./LICENSE) for details.
+
+## 🎯 Impact Vision
+
+### **For Organizations**
+- **Cost Efficiency**: Reduce verification costs by 80%
+- **Speed**: Accelerate hiring by 70%
+- **Quality**: Improve hiring decisions with AI insights
+- **Compliance**: Built-in compliance and audit trails
+
+### **For Candidates**
+- **Privacy**: Control over personal data
+- **Portability**: Reusable verifiable credentials
+- **Transparency**: Clear verification process
+- **Efficiency**: Faster application processing
+
+### **For the Industry**
+- **Standardization**: Open standards for employment verification
+- **Innovation**: Community-driven feature development
+- **Accessibility**: Enterprise capabilities for all organizations
+- **Trust**: Transparent, auditable verification processes
+
+## 🚀 Roadmap
+
+### **Phase 1: Foundation (Complete) ✅**
+- Provider-agnostic architecture
+- Mock providers for development
+- Basic UI and API structure
+- Documentation and guides
+
+### **Phase 2: Core Features (In Progress) 🔄**
+- Real provider implementations (Supabase, Clerk, etc.)
+- Complete candidate submission flow
+- Reference response collection
+- Basic AI analysis
+
+### **Phase 3: Advanced Features (Planned) 📋**
+- Verifiable credentials implementation
+- Zero-knowledge proofs
+- Advanced AI scoring
+- Blockchain integration
 
 ## 🎉 You're Ready!
 
